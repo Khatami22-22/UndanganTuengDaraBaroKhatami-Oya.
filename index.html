@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <base target="_top">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/3554/3554538.png" type="image/png">
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <link href="https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,400;0,700;1,400&family=Great+Vibes&family=Montserrat:wght@300;600&display=swap" rel="stylesheet">
+
+    <style>
+        :root { --gold: #b8924a; --soft-bg: #fdfaf7; }
+        body { font-family: 'Crimson Text', serif; background-color: var(--soft-bg); color: #444; overflow-x: hidden; margin: 0; text-align: center; }
+        
+        #welcome-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), 
+                        url('https://lh3.googleusercontent.com/d/1z-6cGQJ8Y9V7Ae1KcJMDCmafjeal3QLk') center no-repeat;
+            background-size: cover;
+            background-position: center 40%; 
+            z-index: 10000; display: flex; align-items: center; justify-content: center; color: white; text-align: center;
+            transition: transform 1.8s cubic-bezier(0.77, 0, 0.175, 1), opacity 1.5s ease, filter 1.5s ease;
+            padding: 20px;
+        }
+
+        .overlay-hidden {
+            transform: translateY(-100%);
+            opacity: 0;
+            filter: blur(10px);
+        }
+
+        #bg-animation { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; pointer-events: none; }
+        .particle { position: absolute; background: rgba(184, 146, 74, 0.2); border-radius: 50%; animation: floatOrganic 25s infinite ease-in-out; }
+        @keyframes floatOrganic {
+            0% { transform: translateY(110vh) scale(1); opacity: 0; }
+            50% { opacity: 0.5; transform: scale(1.2); }
+            100% { transform: translateY(-10vh) scale(1); opacity: 0; }
+        }
+
+        .font-estetik { font-family: 'Great Vibes', cursive; color: var(--gold); line-height: 1.2; }
+        .card-elegant { 
+            background: white; border-radius: 35px; padding: 40px 20px; 
+            box-shadow: 0 15px 50px rgba(184, 146, 74, 0.08); border: 1px solid rgba(184, 146, 74, 0.15); 
+            margin-bottom: 40px; margin-left: 10px; margin-right: 10px;
+        }
+
+        .couple-wrapper { 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            margin-bottom: 30px;
+            position: relative;
+        }
+        .couple-item { flex: 1; max-width: 160px; }
+        .pria-side { transform: translateX(15px); }
+        .wanita-side { transform: translateX(-15px); }
+        
+        .couple-frame { width: 140px; height: 140px; border-radius: 50%; border: 4px solid white; box-shadow: 0 8px 20px rgba(0,0,0,0.1); object-fit: cover; }
+        .ampersand { font-size: 2.5rem; color: var(--gold); z-index: 2; font-family: 'Great Vibes', cursive; }
+
+        .countdown-item { 
+            background: var(--gold); color: white; border-radius: 12px; 
+            padding: 8px; min-width: 65px; margin: 4px; box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+        .countdown-number { font-size: 1.2rem; font-weight: bold; display: block; }
+        .countdown-label { font-size: 0.6rem; text-transform: uppercase; }
+
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            justify-content: center;
+            align-items: center;
+        }
+        .gallery-img { 
+            width: 100%; 
+            aspect-ratio: 1/1; 
+            object-fit: cover; 
+            border-radius: 15px; 
+            border: 2px solid white; 
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1); 
+            transition: transform 0.3s ease; 
+        }
+        .gallery-img:hover { transform: scale(1.03); }
+        
+        .btn-gold { 
+            background: linear-gradient(135deg, #b8924a, #d4af37); color: white !important; border: none; 
+            padding: 12px 35px; border-radius: 50px; font-weight: 600; transition: 0.4s;
+            box-shadow: 0 10px 20px rgba(184, 146, 74, 0.2); text-decoration: none; display: inline-block;
+        }
+
+        @media (max-width: 576px) {
+            .font-estetik { font-size: 3rem !important; }
+            #welcome-overlay h1.font-estetik { font-size: 3.5rem !important; }
+            .couple-frame { width: 120px; height: 120px; }
+            .pria-side { transform: translateX(10px); }
+            .wanita-side { transform: translateX(-10px); }
+            .gallery-grid { grid-template-columns: repeat(2, 1fr); }
+            .card-elegant { padding: 30px 15px; }
+        }
+
+        #guestbook-container { height: 320px; overflow: hidden; position: relative; margin-top: 30px; }
+        #guestbook-slider { animation: autoScroll 40s linear infinite; }
+        @keyframes autoScroll { 0% { transform: translateY(0); } 100% { transform: translateY(-100%); } }
+        #youtube-player { position: absolute; width: 1px; height: 1px; opacity: 0; }
+    </style>
+</head>
+<body style="overflow: hidden;">
+
+    <div id="welcome-overlay">
+        <div data-aos="fade-up" data-aos-duration="2000">
+            <h2 class="mb-4" style="font-size: 1.2rem;">السَّلاَمُ عَلَيْكُمْ وَرَحْمَةُ اللهِ وَبَرَكَاتُهُ</h2>
+            <h1 class="font-estetik" style="font-size: 4rem;">Khatami</h1>
+            <div class="ampersand" style="color: white; margin: 0;">&</div>
+            <h1 class="font-estetik" style="font-size: 4rem;">Oya</h1>
+            <p class="mt-4 mb-5 text-uppercase" style="letter-spacing: 2px; font-size: 0.8rem;">Acara Ngunduh Mantu (Tueng Dara Baro)</p>
+            <button class="btn-gold" onclick="openInvitation()">
+                <i class="bi bi-envelope-open-heart me-2"></i> BUKA UNDANGAN
+            </button>
+        </div>
+    </div>
+
+    <div id="bg-animation"></div>
+    <div id="youtube-player"><div id="player"></div></div>
+
+    <header class="container py-5 d-flex flex-column justify-content-center" style="min-height: 100vh;">
+        <div data-aos="zoom-in">
+            <h6 class="text-uppercase mb-5" style="letter-spacing: 5px;">Walimatul 'Ursy</h6>
+            
+            <div class="couple-wrapper">
+                <div class="couple-item pria-side" data-aos="fade-right">
+                    <img src="https://lh3.googleusercontent.com/d/1fYJf3i1K3ELUj81JQPU6KXrRzC7C9K2p" class="couple-frame">
+                </div>
+                <div class="ampersand">&</div>
+                <div class="couple-item wanita-side" data-aos="fade-left">
+                    <img src="https://lh3.googleusercontent.com/d/1ysuA27WLgOy2WeHVLnZq_W3_V5Xkh9pB" class="couple-frame">
+                </div>
+            </div>
+
+            <div class="mt-2">
+                <div data-aos="fade-up">
+                    <h2 class="font-estetik" style="font-size: 2.5rem;">Muhammad Khatami, S.Kom</h2>
+                    <p class="small">Putra dari Bpk. Marzuki & Ibu Agustinar</p>
+                </div>
+                <div class="ampersand" style="font-size: 1.5rem; margin: 5px 0;">&</div>
+                <div data-aos="fade-up">
+                    <h2 class="font-estetik" style="font-size: 2.5rem;">Oya Monica, S.Kom</h2>
+                    <p class="small">Putri dari Bpk. Agus Faisal & Ibu Hendon</p>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <section class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-9">
+                <div class="card-elegant py-4" data-aos="fade-up">
+                    <p class="mb-3 text-uppercase" style="letter-spacing: 2px; font-size: 0.8rem;">Menuju Hari Bahagia</p>
+                    <div class="d-flex justify-content-center mb-0">
+                        <div class="countdown-item"><span id="days" class="countdown-number">00</span><span class="countdown-label">Hari</span></div>
+                        <div class="countdown-item"><span id="hours" class="countdown-number">00</span><span class="countdown-label">Jam</span></div>
+                        <div class="countdown-item"><span id="minutes" class="countdown-number">00</span><span class="countdown-label">Menit</span></div>
+                        <div class="countdown-item"><span id="seconds" class="countdown-number">00</span><span class="countdown-label">Detik</span></div>
+                    </div>
+                </div>
+
+                <div class="card-elegant" data-aos="fade-up">
+                    <h6 class="text-uppercase mb-2" style="color: #888; letter-spacing: 2px;">Flashback</h6>
+                    <h3 class="font-estetik" style="font-size: 2.5rem;">Akad Nikah</h3>
+                    <p class="italic mb-3">Alhamdulillah, akad nikah telah dilaksanakan pada:</p>
+                    <hr class="mx-auto my-3" style="width: 40px; border-top: 2px solid var(--gold);">
+                    <h5 class="fw-bold">Kamis, 25 September 2025</h5>
+                    <p class="mb-0"><i class="bi bi-geo-alt"></i> KUA Kecamatan Kota Juang, Bireuen</p>
+                </div>
+
+                <div class="card-elegant" data-aos="fade-up">
+                    <h6 class="text-uppercase mb-3" style="color: var(--gold); letter-spacing: 4px;">Acara Utama</h6>
+                    <h2 class="font-estetik" style="font-size: 3.5rem;">Tueng Dara Baro</h2>
+                    <hr class="mx-auto my-4" style="width: 60px; border-top: 2px solid var(--gold);">
+                    <h4 class="fw-bold">Minggu, 12 April 2026</h4>
+                    <p>11:00 WIB — Selesai</p>
+                    <p class="mb-5"><i class="bi bi-house-check"></i> <strong>Kediaman Mempelai Pria</strong><br>
+                        Gampong Juli Meunasah Tambo, Kec. Juli,<br>Kab. Bireuen, Aceh</p>
+                    
+                    <div class="ratio ratio-16x9 mb-5 rounded-4 overflow-hidden border">
+                        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3973.911364375!2d96.7!3d5.2!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zNcKwMTInMDAuMCJOIDk2wrA0MicwMC4wIkU!5e0!3m2!1sid!2sid!4v1600000000000!5m2!1sid!2sid" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+                    </div>
+
+                    <a href="https://goo.gl/maps/NsEyuksp7n79YiyM8" target="_blank" class="btn-gold">
+                        <i class="bi bi-geo-alt-fill me-2"></i> PETUNJUK LOKASI
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="container mb-5">
+        <div class="card-elegant" data-aos="fade-up">
+            <h3 class="font-estetik mb-4" style="font-size: 3rem;">Galeri Kami</h3>
+            <div class="gallery-grid">
+                <img src="https://lh3.googleusercontent.com/d/1k7jwLZnT6igJB6XUPXjAhhbKz2yjE7Io" class="gallery-img" alt="Foto 1">
+                <img src="https://lh3.googleusercontent.com/d/1YrgOIyYMxJ-ssFW_TW3EH6aUeFYXoloP" class="gallery-img" alt="Foto 2">
+                <img src="https://lh3.googleusercontent.com/d/1vof7Nz-C5yb_nZr2Zjc8t3w4Bg6gjQMU" class="gallery-img" alt="Foto 3">
+                <img src="https://lh3.googleusercontent.com/d/1z-6cGQJ8Y9V7Ae1KcJMDCmafjeal3QLk" class="gallery-img" alt="Foto 4">
+                <img src="https://lh3.googleusercontent.com/d/18BBvhyqSw_rc8krN_KupKwuGSpg19-nz" class="gallery-img" alt="Foto 5">
+                <img src="https://lh3.googleusercontent.com/d/1mkbRok0qlQN00kTr-rEwgL3fbRlQPPUi" class="gallery-img" alt="Foto 6">
+                <img src="https://lh3.googleusercontent.com/d/1zJaap86I9Kc80xPGI2To6xtCOZzlYmTi" class="gallery-img" alt="Foto 7">
+                <img src="https://lh3.googleusercontent.com/d/1wEIho7kWHyn82tDsAdQMDV4ECenXlMne" class="gallery-img" alt="Foto 8">
+                <img src="https://lh3.googleusercontent.com/d/1fEFG6J7ZVJBLHkH_eN9Cqg5c19qLEeQZ" class="gallery-img" alt="Foto 9">
+            </div>
+        </div>
+    </section>
+
+    <section class="container py-5 mb-5">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card-elegant" data-aos="fade-up">
+                    <h3 class="font-estetik mb-5" style="font-size: 3.5rem;">Doa & Ucapan</h3>
+                    <form id="rsvpForm" class="mb-5">
+                        <input type="text" name="nama" class="form-control rounded-pill mb-3 p-3 text-center" placeholder="Nama Anda" required>
+                        <select name="kehadiran" class="form-select rounded-pill mb-3 p-3 text-center">
+                            <option value="Hadir">Insya Allah Hadir</option>
+                            <option value="Berhalangan">Berhalangan Hadir</option>
+                        </select>
+                        <textarea name="pesan" class="form-control rounded-4 mb-4 p-3 text-center" rows="3" placeholder="Tulis doa..." required></textarea>
+                        <button type="submit" class="btn-gold w-100 py-3">KIRIM UCAPAN</button>
+                    </form>
+                    <div id="guestbook-container">
+                        <div id="guestbook-slider"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="py-5 bg-white border-top">
+        <p class="font-estetik mb-0" style="font-size: 2rem;">Khatami & Oya</p>
+    </footer>
+
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="https://www.youtube.com/iframe_api"></script>
+    <script>
+        AOS.init({ duration: 1500 });
+
+        // --- KONFIGURASI PENTING ---
+        // Masukkan URL Web App Apps Script Anda di sini (setelah Deploy -> Anyone)
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw8bkHRFMDBrT9xuzHYW94qYFoCHkV9dRLCjKyQPZQ_c2u4GdPV5ntgywRtEvVob45d/exec"; 
+
+        const targetDate = new Date("April 12, 2026 11:00:00").getTime();
+        function updateCountdown() {
+            const now = new Date().getTime();
+            const diff = targetDate - now;
+            if (diff > 0) {
+                document.getElementById("days").innerText = Math.floor(diff / (1000 * 60 * 60 * 24));
+                document.getElementById("hours").innerText = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                document.getElementById("minutes").innerText = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                document.getElementById("seconds").innerText = Math.floor((diff % (1000 * 60)) / 1000);
+            }
+        }
+        setInterval(updateCountdown, 1000);
+
+        let player;
+        function onYouTubeIframeAPIReady() {
+            player = new YT.Player('player', {
+                height: '0', width: '0',
+                videoId: 'AtPBw-X0H5w', 
+                playerVars: { 'autoplay': 0, 'loop': 1, 'playlist': 'AtPBw-X0H5w', 'controls': 0, 'showinfo': 0 }
+            });
+        }
+
+        function openInvitation() {
+            const overlay = document.getElementById('welcome-overlay');
+            overlay.classList.add('overlay-hidden');
+            setTimeout(() => { overlay.style.display = 'none'; }, 1800);
+            document.body.style.overflow = 'auto';
+            if (player) { player.playVideo(); }
+        }
+
+        const bg = document.getElementById('bg-animation');
+        for (let i = 0; i < 20; i++) {
+            const p = document.createElement('div');
+            p.className = 'particle';
+            p.style.width = p.style.height = Math.random() * 12 + 5 + 'px';
+            p.style.left = Math.random() * 100 + 'vw';
+            p.style.animationDelay = Math.random() * 20 + 's';
+            bg.appendChild(p);
+        }
+
+        // --- FUNGSI GUESTBOOK (SINKRON DENGAN KODE.GS) ---
+        function loadGB() {
+            if (typeof google !== 'undefined' && google.script && google.script.run) {
+                // Berjalan di lingkungan Apps Script
+                google.script.run.withSuccessHandler(renderData).getGuestbookData();
+            } else {
+                // Berjalan di GitHub Pages (pakai Fetch API)
+                fetch(SCRIPT_URL + "?action=getGuestbook")
+                .then(res => res.json())
+                .then(data => renderData(data))
+                .catch(err => console.error("Error load data:", err));
+            }
+        }
+
+        function renderData(data) {
+            const slider = document.getElementById('guestbook-slider');
+            if(!data || data.length === 0) return;
+            const content = data.map(m => `
+                <div class="mb-3 p-4 bg-light rounded-4 border-0 shadow-sm mx-2">
+                    <h6 class="fw-bold mb-1" style="color: var(--gold)">${m.nama}</h6>
+                    <p class="small mb-0 italic">"${m.pesan}"</p>
+                </div>
+            `).join('');
+            slider.innerHTML = content + content;
+        }
+
+        // --- FUNGSI RSVP ---
+        document.getElementById('rsvpForm').onsubmit = function(e) {
+            e.preventDefault();
+            const btn = e.target.querySelector('button');
+            btn.disabled = true; btn.innerText = "Mengirim...";
+
+            const formData = new FormData(this);
+            const payload = new URLSearchParams(formData);
+
+            if (typeof google !== 'undefined' && google.script && google.script.run) {
+                // Apps Script mode
+                google.script.run.withSuccessHandler(() => {
+                    successRSVP(btn, this);
+                }).processRSVP(Object.fromEntries(formData));
+            } else {
+                // GitHub mode
+                fetch(SCRIPT_URL, {
+                    method: 'POST',
+                    body: payload
+                })
+                .then(() => {
+                    successRSVP(btn, this);
+                })
+                .catch(err => {
+                    alert("Gagal mengirim ucapan.");
+                    btn.disabled = false; btn.innerText = "KIRIM UCAPAN";
+                });
+            }
+        };
+
+        function successRSVP(btn, form) {
+            btn.disabled = false; btn.innerText = "KIRIM UCAPAN";
+            form.reset(); 
+            loadGB();
+        }
+
+        window.onload = loadGB;
+    </script>
+</body>
+</html>
